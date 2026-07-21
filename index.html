@@ -93,26 +93,45 @@
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);}
   .reveal.in{opacity:1;transform:none;}
 
-  /* ---------- seam demo ---------- */
+  /* ---------- stitch animation demo ---------- */
   .seam-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
   @media(max-width:760px){.seam-wrap{grid-template-columns:1fr;gap:30px;}}
-  .seam-stage{display:flex;justify-content:center;}
-  .seam-phone{width:236px;}
-  .seam-phone .screen{aspect-ratio:1206/2610;}
-  .slice{position:absolute;left:0;width:100%;overflow:hidden;}
-  .slice img{position:absolute;left:0;width:100%;}
-  .sTop{top:0;height:50%;animation:sepTop 6s ease-in-out infinite;}
-  .sTop img{top:0;}
-  .sBot{bottom:0;height:50%;animation:sepBot 6s ease-in-out infinite;}
-  /* bottom slice shows a lower part of the same capture so the two read continuous when joined */
-  .sBot img{top:-100%;}
-  @keyframes sepTop{0%,18%{transform:translateY(-9%);}46%,100%{transform:translateY(0);}}
-  @keyframes sepBot{0%,18%{transform:translateY(9%);}46%,100%{transform:translateY(0);}}
-  .seamline{position:absolute;left:6%;right:6%;top:50%;height:3px;border-radius:3px;transform:translateY(-50%);
-            background:linear-gradient(90deg,transparent,var(--indigo-lite),transparent);
-            box-shadow:0 0 16px 2px rgba(139,125,255,.9);opacity:0;z-index:5;
-            animation:seamGlow 6s ease-in-out infinite;}
-  @keyframes seamGlow{0%,20%{opacity:0;}34%{opacity:1;}54%{opacity:.9;}70%,100%{opacity:0;}}
+  .tw-demo{position:relative;}
+  .stage{position:relative;width:100%;max-width:420px;height:500px;margin:0 auto;}
+  /* the 4 source screenshots (mini phones) */
+  .thumb{position:absolute;top:50%;left:50%;width:120px;margin:-131px 0 0 -60px;
+         background:#0b0b10;border-radius:20px;padding:5px;
+         box-shadow:0 22px 44px -18px rgba(10,4,40,.55);will-change:transform,opacity;
+         transition:transform 1.05s cubic-bezier(.55,.06,.2,1),opacity .8s ease;z-index:4;}
+  .thumb .scr{position:relative;border-radius:15px;overflow:hidden;}
+  .thumb .scr img{width:100%;display:block;}
+  .fab{position:absolute;right:6%;bottom:9.5%;width:30px;height:30px;border-radius:50%;
+       border:3px solid #ff4d6d;box-shadow:0 0 0 4px rgba(255,77,109,.22);opacity:0;
+       transition:opacity .4s, border-color .4s, box-shadow .4s;z-index:5;}
+  .fab::before,.fab::after{content:"";position:absolute;top:50%;left:50%;width:16px;height:3px;border-radius:2px;
+       background:#ff4d6d;transform:translate(-50%,-50%) rotate(45deg);opacity:0;transition:opacity .3s;}
+  .fab::after{transform:translate(-50%,-50%) rotate(-45deg);}
+  /* the stitched result phone */
+  .tw-result{position:absolute;top:50%;left:50%;width:196px;margin:-212px 0 0 -98px;
+             background:#0b0b10;border-radius:34px;padding:8px;z-index:6;opacity:0;transform:scale(.9);
+             box-shadow:0 40px 80px -26px rgba(10,4,40,.62);
+             transition:opacity .8s ease, transform .9s cubic-bezier(.55,.06,.2,1);}
+  .tw-result .screen{position:relative;border-radius:26px;overflow:hidden;background:#fff;aspect-ratio:1206/2610;}
+  .tw-result .long{position:absolute;top:0;left:0;width:100%;animation:twScroll 10s ease-in-out infinite alternate;}
+  @keyframes twScroll{from{transform:translateY(0);}to{transform:translateY(-60%);}}
+  .keep-chip{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);white-space:nowrap;
+             background:rgba(34,197,94,.95);color:#fff;font-size:12px;font-weight:700;padding:5px 11px;
+             border-radius:999px;box-shadow:0 8px 18px -6px rgba(34,197,94,.6);opacity:0;transition:opacity .5s;z-index:7;}
+  /* phase states (set via data-phase on .tw-demo) */
+  .tw-demo[data-phase="0"] .fab,.tw-demo[data-phase="1"] .fab{opacity:1;}
+  .tw-demo[data-phase="1"] .thumb:not(:nth-of-type(4)) .fab{border-color:#ff4d6d;}
+  .tw-demo[data-phase="1"] .thumb:not(:nth-of-type(4)) .fab::before,
+  .tw-demo[data-phase="1"] .thumb:not(:nth-of-type(4)) .fab::after{opacity:1;}
+  .tw-demo[data-phase="1"] .thumb:nth-of-type(4) .fab{border-color:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.22);}
+  .tw-demo[data-phase="2"] .tw-result,.tw-demo[data-phase="3"] .tw-result{opacity:1;transform:scale(1);}
+  .tw-demo[data-phase="3"] .keep-chip{opacity:1;}
+  .demo-cap{text-align:center;color:var(--muted);font-size:14.5px;font-weight:600;min-height:20px;
+            margin-top:6px;transition:opacity .4s;}
   .steps{list-style:none;padding:0;margin:22px 0 0;}
   .steps li{display:flex;gap:15px;align-items:flex-start;margin-bottom:20px;}
   .num{flex:none;width:34px;height:34px;border-radius:50%;background:var(--indigo);color:#fff;
@@ -221,23 +240,29 @@
   <!-- HOW IT WORKS -->
   <section id="how">
     <div class="wrap seam-wrap">
-      <div class="seam-stage reveal">
-        <div class="phone seam-phone">
-          <div class="screen">
-            <div class="slice sTop"><img src="hero_long.png" alt=""></div>
-            <div class="slice sBot"><img src="hero_long.png" alt=""></div>
-            <div class="seamline"></div>
+      <div class="tw-demo reveal" data-phase="0">
+        <div class="stage">
+          <div class="thumb"><div class="scr"><img src="tw1.png" alt="Screenshot 1"><span class="fab"></span></div></div>
+          <div class="thumb"><div class="scr"><img src="tw2.png" alt="Screenshot 2"><span class="fab"></span></div></div>
+          <div class="thumb"><div class="scr"><img src="tw3.png" alt="Screenshot 3"><span class="fab"></span></div></div>
+          <div class="thumb"><div class="scr"><img src="tw4.png" alt="Screenshot 4"><span class="fab"></span></div></div>
+          <div class="tw-result">
+            <div class="screen">
+              <img class="long" src="tw_long.png" alt="Four screenshots stitched into one long image">
+            </div>
+            <span class="keep-chip">Floating + kept once ✓</span>
           </div>
         </div>
+        <p class="demo-cap">Four screenshots — the blue + floats on every one.</p>
       </div>
       <div class="reveal">
         <p class="eyebrow">How it works</p>
-        <h2>It matches the pixels, not just the edges.</h2>
-        <p class="sub">Stitch finds where one screenshot ends and the next begins by comparing the actual content — then trims the overlap so the join is invisible.</p>
+        <h2>Four shots in, one clean image out.</h2>
+        <p class="sub">Stitch matches the content between screenshots, trims the overlap, and detects floating buttons that repeat — keeping them a single time.</p>
         <ul class="steps">
-          <li><span class="num">1</span><div><h4>Capture a scroll</h4><p>Screenshot a long page in a few overlapping shots — Photos or the share sheet.</p></div></li>
-          <li><span class="num">2</span><div><h4>Stitch finds the seam</h4><p>It locates the matching row between shots and cuts exactly there.</p></div></li>
-          <li><span class="num">3</span><div><h4>Chrome removed once</h4><p>Status bars, nav bars and floating buttons that repeat are kept a single time.</p></div></li>
+          <li><span class="num">1</span><div><h4>Capture a scroll</h4><p>Screenshot a long page in a few overlapping shots — from Photos or the share sheet.</p></div></li>
+          <li><span class="num">2</span><div><h4>Stitch finds the seam</h4><p>It locates the matching row between shots and cuts exactly there, so the join disappears.</p></div></li>
+          <li><span class="num">3</span><div><h4>Floating buttons removed</h4><p>A “+” or bar that sticks to the screen is detected and shown only once, not on every shot.</p></div></li>
         </ul>
       </div>
     </div>
@@ -326,6 +351,7 @@
   </footer>
 
   <script>
+    // scroll reveal
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
     },{threshold:.14});
@@ -333,6 +359,33 @@
       el.style.transitionDelay = (i % 3) * 90 + 'ms';
       io.observe(el);
     });
+
+    // "4 screenshots → 1 stitched image, floating + removed" animation
+    (function(){
+      const demo = document.querySelector('.tw-demo');
+      if(!demo) return;
+      const thumbs = [...demo.querySelectorAll('.thumb')];
+      const cap = demo.querySelector('.demo-cap');
+      const fan   = [ {x:-150,y:-34,r:-11}, {x:-51,y:14,r:-4}, {x:51,y:-10,r:4}, {x:150,y:30,r:11} ];
+      const stack = [ {x:-13,y:-18,r:-3},  {x:-4,y:-6,r:-1},  {x:4,y:6,r:1},    {x:13,y:18,r:3}  ];
+      const setThumbs = (pos, op)=> thumbs.forEach((t,i)=>{
+        const p = pos[i];
+        t.style.transform = `translate(${p.x}px,${p.y}px) rotate(${p.r}deg)`;
+        t.style.opacity = op;
+      });
+      const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+      if(reduce){ demo.dataset.phase='3'; setThumbs(stack,0); cap.textContent='Four screenshots stitched into one — the + kept just once.'; return; }
+
+      const phases = [
+        {d:1900, run(){ demo.dataset.phase='0'; setThumbs(fan,1);   cap.textContent='Four screenshots — the blue + floats on every one.'; }},
+        {d:1900, run(){ demo.dataset.phase='1'; setThumbs(fan,1);   cap.textContent='Stitch flags the repeated +, keeping one.'; }},
+        {d:1700, run(){ demo.dataset.phase='2'; setThumbs(stack,0); cap.textContent='Matching the overlap and combining…'; }},
+        {d:2900, run(){ demo.dataset.phase='3';                     cap.textContent='One long image — the floating + shown once.'; }},
+      ];
+      let i = 0;
+      setThumbs(fan,1);
+      (function tick(){ phases[i].run(); const d = phases[i].d; i = (i+1)%phases.length; setTimeout(tick, d); })();
+    })();
   </script>
 </body>
 </html>
