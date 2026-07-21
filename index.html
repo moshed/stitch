@@ -97,7 +97,7 @@
   .seam-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
   @media(max-width:760px){.seam-wrap{grid-template-columns:1fr;gap:30px;}}
   .tw-demo{position:relative;}
-  .stage{position:relative;width:100%;max-width:420px;height:500px;margin:0 auto;}
+  .stage{position:relative;width:100%;max-width:420px;height:520px;margin:0 auto;}
   /* the 4 source screenshots (mini phones) */
   .thumb{position:absolute;top:50%;left:50%;width:120px;margin:-131px 0 0 -60px;
          background:#0b0b10;border-radius:20px;padding:5px;
@@ -112,24 +112,16 @@
        background:#ff4d6d;transform:translate(-50%,-50%) rotate(45deg);opacity:0;transition:opacity .3s;}
   .fab::after{transform:translate(-50%,-50%) rotate(-45deg);}
   /* the stitched result phone */
-  .tw-result{position:absolute;top:50%;left:50%;width:196px;margin:-212px 0 0 -98px;
-             background:#0b0b10;border-radius:34px;padding:8px;z-index:6;opacity:0;transform:scale(.9);
+  /* once combined: the whole stitch shown as ONE long static image (no scroll) */
+  .tw-result{position:absolute;top:50%;left:50%;width:96px;margin:-232px 0 0 -48px;
+             background:#0b0b10;border-radius:16px;padding:7px;z-index:6;opacity:0;transform:scale(.9);
              box-shadow:0 40px 80px -26px rgba(10,4,40,.62);
              transition:opacity .8s ease, transform .9s cubic-bezier(.55,.06,.2,1);}
-  .tw-result .screen{position:relative;border-radius:26px;overflow:hidden;background:#fff;aspect-ratio:1206/2610;}
-  .tw-result .long{position:absolute;top:0;left:0;width:100%;transform:translateY(0);}
-  /* the real stitched image (all 4 shots) pans top→bottom only while the result is shown */
-  .tw-demo[data-phase="3"] .long{animation:twScroll 3.6s ease-in-out forwards;}
-  @keyframes twScroll{from{transform:translateY(0);}to{transform:translateY(-61%);}}
-  /* progress rail proves the length = 4 stacked shots */
-  .rail{position:absolute;top:14px;bottom:14px;right:-14px;width:4px;border-radius:4px;background:rgba(108,92,231,.18);z-index:7;opacity:0;transition:opacity .5s;}
-  .rail i{position:absolute;left:0;right:0;top:0;height:16%;border-radius:4px;background:var(--indigo);}
-  .tw-demo[data-phase="3"] .rail{opacity:1;}
-  .tw-demo[data-phase="3"] .rail i{animation:railFill 3.6s ease-in-out forwards;}
-  @keyframes railFill{from{top:0;}to{top:84%;}}
-  .keep-chip{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);white-space:nowrap;
-             background:rgba(34,197,94,.95);color:#fff;font-size:12px;font-weight:700;padding:5px 11px;
-             border-radius:999px;box-shadow:0 8px 18px -6px rgba(34,197,94,.6);opacity:0;transition:opacity .5s;z-index:7;}
+  .tw-result .screen{position:relative;border-radius:11px;overflow:hidden;background:#fff;aspect-ratio:1206/6602;}
+  .tw-result .long{position:absolute;top:0;left:0;width:100%;}
+  .one-badge{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);white-space:nowrap;
+             background:rgba(34,197,94,.96);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;
+             border-radius:999px;box-shadow:0 8px 18px -6px rgba(34,197,94,.6);opacity:0;transition:opacity .5s;z-index:8;}
   /* phase states (set via data-phase on .tw-demo) */
   .tw-demo[data-phase="0"] .fab,.tw-demo[data-phase="1"] .fab{opacity:1;}
   .tw-demo[data-phase="1"] .thumb:not(:nth-of-type(4)) .fab{border-color:#ff4d6d;}
@@ -137,7 +129,7 @@
   .tw-demo[data-phase="1"] .thumb:not(:nth-of-type(4)) .fab::after{opacity:1;}
   .tw-demo[data-phase="1"] .thumb:nth-of-type(4) .fab{border-color:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.22);}
   .tw-demo[data-phase="2"] .tw-result,.tw-demo[data-phase="3"] .tw-result{opacity:1;transform:scale(1);}
-  .tw-demo[data-phase="3"] .keep-chip{opacity:1;}
+  .tw-demo[data-phase="3"] .one-badge{opacity:1;}
   .demo-cap{text-align:center;color:var(--muted);font-size:14.5px;font-weight:600;min-height:20px;
             margin-top:6px;transition:opacity .4s;}
   .steps{list-style:none;padding:0;margin:22px 0 0;}
@@ -167,10 +159,10 @@
   .gitem:nth-child(3) .phone{animation-delay:1s;}
   .gitem:nth-child(4) .phone{animation-delay:1.5s;}
   .gcap{text-align:center;color:var(--muted);font-size:14px;font-weight:600;margin-top:16px;}
-  /* a real combined stitch, scrolling to show its full length */
-  .gitem.stitched .screen{position:relative;aspect-ratio:1206/2610;overflow:hidden;}
-  .gitem.stitched .screen img{position:absolute;top:0;left:0;width:100%;animation:galScroll 15s ease-in-out infinite alternate;}
-  @keyframes galScroll{from{transform:translateY(0);}to{transform:translateY(-61%);}}
+  /* a real combined stitch shown as one long static image */
+  .gitem.stitched .phone{width:98px;margin:0 auto;}
+  .gitem.stitched .screen{position:relative;aspect-ratio:1206/6602;overflow:hidden;}
+  .gitem.stitched .screen img{position:absolute;top:0;left:0;width:100%;}
   @media(max-width:760px){
     .gallery{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;
              padding:6px 22px 16px;margin:0 -22px;scroll-snap-type:x mandatory;}
@@ -262,9 +254,8 @@
             <div class="screen">
               <img class="long" src="tw_long.png" alt="Four screenshots stitched into one long image">
             </div>
-            <div class="rail"><i></i></div>
-            <span class="keep-chip">Floating + kept once ✓</span>
           </div>
+          <span class="one-badge">One long image ✓</span>
         </div>
         <p class="demo-cap">Four screenshots — the blue + floats on every one.</p>
       </div>
@@ -393,7 +384,7 @@
         {d:1900, run(){ demo.dataset.phase='0'; setThumbs(fan,1);   cap.textContent='Four screenshots — the blue + floats on every one.'; }},
         {d:1900, run(){ demo.dataset.phase='1'; setThumbs(fan,1);   cap.textContent='Stitch flags the repeated +, keeping one.'; }},
         {d:1500, run(){ demo.dataset.phase='2'; setThumbs(stack,0); cap.textContent='Matching the overlap and combining…'; }},
-        {d:4000, run(){ demo.dataset.phase='3';                     cap.textContent='One long image — all four shots, + shown once.'; }},
+        {d:3200, run(){ demo.dataset.phase='3';                     cap.textContent='One long static image — all four shots, + shown once.'; }},
       ];
       let i = 0;
       setThumbs(fan,1);
