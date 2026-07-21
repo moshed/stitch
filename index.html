@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stitch — Combine screenshots into one long image</title>
+<style>
+  :root { --indigo:#6C5CE7; --indigo2:#3a2c96; --ink:#16161d; --muted:#6b6b78; --bg:#f6f6fb; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+         color:var(--ink); background:var(--bg); line-height:1.55; }
+  .hero { text-align:center; padding:72px 20px 56px;
+          background:linear-gradient(180deg,var(--indigo) 0%,var(--indigo2) 100%); color:#fff; }
+  .hero img { width:104px; height:104px; border-radius:24px; box-shadow:0 12px 30px rgba(0,0,0,.25); }
+  .hero h1 { font-size:44px; margin:20px 0 8px; letter-spacing:-.02em; }
+  .hero p { font-size:19px; opacity:.92; max-width:560px; margin:0 auto; }
+  .wrap { max-width:760px; margin:0 auto; padding:48px 22px; }
+  .features { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:560px){ .features{grid-template-columns:1fr;} .hero h1{font-size:34px;} }
+  .card { background:#fff; border-radius:16px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .card h3 { margin:0 0 6px; font-size:18px; }
+  .card p { margin:0; color:var(--muted); font-size:15px; }
+  .links { text-align:center; margin-top:40px; }
+  .links a { color:var(--indigo); text-decoration:none; font-weight:600; margin:0 12px; }
+  footer { text-align:center; color:var(--muted); font-size:13px; padding:36px 20px 56px; }
+</style>
+</head>
+<body>
+  <div class="hero">
+    <img src="icon.png" alt="Stitch app icon">
+    <h1>Stitch</h1>
+    <p>Combine multiple iPhone screenshots into one long image — with the seams matched so it looks like a single, continuous capture.</p>
+  </div>
+  <div class="wrap">
+    <div class="features">
+      <div class="card"><h3>Smart, seamless joins</h3><p>Take several screenshots of a scrolling page; Stitch matches the content and joins them with invisible seams.</p></div>
+      <div class="card"><h3>Repeated chrome removed</h3><p>Status bars, nav bars, tab bars and floating buttons that repeat on every shot are shown just once.</p></div>
+      <div class="card"><h3>Right from the share sheet</h3><p>Stitch screenshots straight from the iOS share sheet — no need to save them first.</p></div>
+      <div class="card"><h3>Private by design</h3><p>Everything happens on your device. Nothing is uploaded, tracked, or collected.</p></div>
+    </div>
+    <div class="links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="support.html">Support</a>
+    </div>
+  </div>
+  <footer>© 2026 Stitch. Made by Moshe Dancykier.</footer>
+</body>
+</html>
